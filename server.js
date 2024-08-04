@@ -10,11 +10,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("/", (_req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get("/data", async (_req, res) => {
+app.get("/data", async (req, res) => {
   try {
     const response = await axios.get(`${JSON_SERVER_URL}/data`);
     res.json(response.data);
@@ -32,6 +32,24 @@ app.post("/data", async (req, res) => {
   } catch (error) {
     console.error("Error posting data:", error);
     res.status(500).json({ error: "An error occurred while posting data" });
+  }
+});
+
+app.post("/clear-data", async (req, res) => {
+  try {
+    const dataResponse = await axios.get(`${JSON_SERVER_URL}/data`);
+    const data = dataResponse.data;
+    
+    // Delete each item individually
+    for (const item of data) {
+      await axios.delete(`${JSON_SERVER_URL}/data/${item.id}`);
+    }
+    
+    console.log("All data cleared successfully");
+    res.status(200).json({ message: "All data cleared successfully" });
+  } catch (error) {
+    console.error("Error clearing data:", error);
+    res.status(500).json({ error: "An error occurred while clearing data" });
   }
 });
 
