@@ -8,7 +8,7 @@ use it easy
 2. cd /NodePlacticeFormJson-Server
 3. `npm i` 
 4. Launch Server `npm run dev`
-5. Browsing acsess [localhost:3001](http://localhost:3001/)
+5. Browsing acsess [localhost:3000](http://localhost:3000/)
 6. enjoy!
 
 Stop Server Ctrl+c
