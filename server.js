@@ -39,14 +39,12 @@ app.post("/clear-data", async (req, res) => {
   try {
     const dataResponse = await axios.get(`${JSON_SERVER_URL}/data`);
     const data = dataResponse.data;
-    
+
     // Delete each item individually
-    for (const item of data) {
-      await axios.delete(`${JSON_SERVER_URL}/data/${item.id}`);
-    }
-    
-    console.log("All data cleared successfully");
-    res.status(200).json({ message: "All data cleared successfully" });
+    const deletePromises = data.map(item => axios.delete(`${JSON_SERVER_URL}/data/${item.id}`));
+    await Promise.all(deletePromises);
+
+    res.status(200).json({ message: "All data cleared" });
   } catch (error) {
     console.error("Error clearing data:", error);
     res.status(500).json({ error: "An error occurred while clearing data" });

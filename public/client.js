@@ -1,6 +1,9 @@
 async function fetchData() {
   try {
     const response = await fetch('/data');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
     console.log('Fetched data:', data);
     updateDataList(data);
@@ -32,7 +35,8 @@ async function handleSubmit(event) {
       form.reset();
       fetchData();
     } else {
-      console.error('Server error:', await response.text());
+      const errorText = await response.text();
+      throw new Error(`Error submitting form: ${errorText}`);
     }
   } catch (error) {
     console.error('Error submitting form:', error);
